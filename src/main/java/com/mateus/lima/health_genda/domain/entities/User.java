@@ -36,6 +36,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    private Boolean isActive = true;
+
     @CreationTimestamp
     private String createdAt;
 
