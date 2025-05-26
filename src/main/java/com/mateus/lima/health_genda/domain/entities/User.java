@@ -14,16 +14,16 @@ import org.hibernate.validator.constraints.Length;
 import java.util.UUID;
 
 @Entity(name = "users")
-@Builder
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Pattern(regexp = "\\S+", message = "O campo fullName não deve conter espaços")
+
     private String fullName;
 
     @Column(unique = true, nullable = false)
@@ -37,7 +37,7 @@ public class User {
     private UserRole role;
 
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean isActive;
 
     @CreationTimestamp
     private String createdAt;
