@@ -13,7 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String[] PERMIT_ALL_LIST = {
-            "/user/**"
+            "/user/**",
+            "/auth/**"
     };
 
     @Bean
@@ -21,7 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // desabilita CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/doctor").permitAll() // permite todos de /user/**
+                        .requestMatchers(PERMIT_ALL_LIST).permitAll() // permite todos de /user/**
                         .anyRequest().authenticated()
                 );
 

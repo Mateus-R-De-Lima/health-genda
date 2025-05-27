@@ -37,7 +37,7 @@ public class CreateUserDoctorCase {
                 .isActive(true)
                 .build();
 
-        var response = this.userRepository.saveAndFlush(newUser);
+        var response = this.userRepository.save(newUser);
 
 
         return UserResponseDTO.builder()
