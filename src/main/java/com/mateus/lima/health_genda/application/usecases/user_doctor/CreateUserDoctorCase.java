@@ -8,14 +8,16 @@ import com.mateus.lima.health_genda.exceptions.UserAlreadyExistsException;
 import com.mateus.lima.health_genda.infrastructure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-
+@RequiredArgsConstructor
 public class CreateUserDoctorCase {
-    @Autowired
-    private  UserRepository userRepository;
 
+    private  final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDTO execute(UserRequestDto userRequestDto) {
 
@@ -25,10 +27,12 @@ public class CreateUserDoctorCase {
                 });
 
 
+       var password = passwordEncoder.encode(userRequestDto.getPassword());
+
         var newUser = User.builder()
                 .email(userRequestDto.getEmail())
                 .fullName(userRequestDto.getFullName())
-                .password(userRequestDto.getPassword())
+                .password(password)
                 .role(UserRole.DOCTOR)
                 .isActive(true)
                 .build();

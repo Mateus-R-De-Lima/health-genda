@@ -6,10 +6,7 @@ import com.mateus.lima.health_genda.application.usecases.user_doctor.CreateUserD
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -19,7 +16,12 @@ public class UserController {
     private final CreateUserDoctorCase createUserDoctorCase;
 
     @PostMapping("/doctor")
-    public ResponseEntity<Object>  createDoctor(@Valid @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<Object>  createDoctor( @RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok().body(createUserDoctorCase.execute(userRequestDto));
+    }
+
+    @GetMapping("/doctor")
+    public ResponseEntity<String> getDoctor() {
+        return ResponseEntity.ok("Rota liberada!");
     }
 }
