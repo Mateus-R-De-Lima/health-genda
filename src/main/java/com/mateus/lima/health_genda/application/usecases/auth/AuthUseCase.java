@@ -4,8 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.mateus.lima.health_genda.adapters.dtos.auth.AuthRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.auth.AuthResponseDTO;
-import com.mateus.lima.health_genda.exceptions.BadRequestException;
-import com.mateus.lima.health_genda.exceptions.UserAlreadyExistsException;
+import com.mateus.lima.health_genda.domain.enums.UserRole;
 import com.mateus.lima.health_genda.infrastructure.repositories.UserRepository;
 import com.mateus.lima.health_genda.infrastructure.security.jwt.JwtConstants;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.naming.AuthenticationException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
-public class AuthDoctorUseCase {
+public class AuthUseCase {
 
     @Value("${security.algorithm-key}")
     private String securityKey;
@@ -30,7 +28,7 @@ public class AuthDoctorUseCase {
      private  final UserRepository userRepository;
 
 
-    public AuthResponseDTO execute(AuthRequestDTO authRequestDTO) throws AuthenticationException{
+    public AuthResponseDTO execute(AuthRequestDTO authRequestDTO, UserRole role) throws AuthenticationException{
 
         var userDoctor =
                 this.userRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow( () -> {
@@ -49,7 +47,7 @@ public class AuthDoctorUseCase {
 
         var token = JWT.create()
                 .withIssuer("health")
-                .withClaim("roles", Arrays.asList(userDoctor.getRole().toString()))
+                .withClaim("roles", Arrays.asList(role.toString()))
                 .withExpiresAt(expiresIn)
                 .withSubject(userDoctor.getId().toString())
                 .sign(algorithm) ;

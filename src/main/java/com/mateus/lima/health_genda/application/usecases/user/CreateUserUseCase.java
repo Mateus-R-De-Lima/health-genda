@@ -1,4 +1,4 @@
-package com.mateus.lima.health_genda.application.usecases.user_doctor;
+package com.mateus.lima.health_genda.application.usecases.user;
 
 import com.mateus.lima.health_genda.adapters.dtos.user.UserRequestDto;
 import com.mateus.lima.health_genda.adapters.dtos.user.UserResponseDTO;
@@ -7,19 +7,18 @@ import com.mateus.lima.health_genda.domain.enums.UserRole;
 import com.mateus.lima.health_genda.exceptions.UserAlreadyExistsException;
 import com.mateus.lima.health_genda.infrastructure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateUserDoctorCase {
+public class CreateUserUseCase {
 
     private  final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDTO execute(UserRequestDto userRequestDto) {
+    public UserResponseDTO execute(UserRequestDto userRequestDto,UserRole role) {
 
        this.userRepository.findByEmail(userRequestDto.getEmail())
                 .ifPresent((user) -> {
@@ -33,7 +32,7 @@ public class CreateUserDoctorCase {
                 .email(userRequestDto.getEmail())
                 .fullName(userRequestDto.getFullName())
                 .password(password)
-                .role(UserRole.DOCTOR)
+                .role(role)
                 .isActive(true)
                 .build();
 
