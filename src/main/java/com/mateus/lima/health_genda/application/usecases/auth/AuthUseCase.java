@@ -30,12 +30,12 @@ public class AuthUseCase {
 
     public AuthResponseDTO execute(AuthRequestDTO authRequestDTO, UserRole role) throws AuthenticationException{
 
-        var userDoctor =
+        var user =
                 this.userRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow( () -> {
                     throw  new UsernameNotFoundException("User not found");
                 });
 
-        var passwordMaches = passwordEncoder.matches(authRequestDTO.getPassword(),userDoctor.getPassword());
+        var passwordMaches = passwordEncoder.matches(authRequestDTO.getPassword(),user.getPassword());
 
         if(!passwordMaches){
             throw new AuthenticationException();
@@ -49,7 +49,7 @@ public class AuthUseCase {
                 .withIssuer("health")
                 .withClaim("roles", Arrays.asList(role.toString()))
                 .withExpiresAt(expiresIn)
-                .withSubject(userDoctor.getId().toString())
+                .withSubject(user.getId().toString())
                 .sign(algorithm) ;
 
         return AuthResponseDTO.builder()

@@ -1,9 +1,6 @@
 package com.mateus.lima.health_genda.exceptions.handler;
 
-import com.mateus.lima.health_genda.exceptions.ApiErrorResponse;
-import com.mateus.lima.health_genda.exceptions.BadRequestException;
-import com.mateus.lima.health_genda.exceptions.FieldErrorResponse;
-import com.mateus.lima.health_genda.exceptions.UserAlreadyExistsException;
+import com.mateus.lima.health_genda.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -50,10 +47,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFound(NotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
         List<FieldErrorResponse> errors = List.of(
-                new FieldErrorResponse("email", ex.getMessage())
+                new FieldErrorResponse("user", ex.getMessage())
         );
 
         ApiErrorResponse response = new ApiErrorResponse(409, errors); // 409 = Conflict

@@ -1,6 +1,6 @@
 package com.mateus.lima.health_genda.application.usecases.user;
 
-import com.mateus.lima.health_genda.adapters.dtos.user.UserRequestDto;
+import com.mateus.lima.health_genda.adapters.dtos.user.UserRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.user.UserResponseDTO;
 import com.mateus.lima.health_genda.domain.entities.User;
 import com.mateus.lima.health_genda.domain.enums.UserRole;
@@ -18,7 +18,7 @@ public class CreateUserUseCase {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDTO execute(UserRequestDto userRequestDto,UserRole role) {
+    public UserResponseDTO execute(UserRequestDTO userRequestDto, UserRole role) {
 
        this.userRepository.findByEmail(userRequestDto.getEmail())
                 .ifPresent((user) -> {

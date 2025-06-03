@@ -28,26 +28,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
 
-        if(header != null){
-            var token = this.jwtTokenProvider.validate(header);
 
-            if(token == null){
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            if(header != null){
+                var token = this.jwtTokenProvider.validate(header);
+
+                if(token == null){
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                }
+
+                request.setAttribute("id",token.getSubject());
+
+                var roles = token.getClaim("roles").asList(Object.class);
+                var grats =
+                        roles.stream().map(role ->
+                                new SimpleGrantedAuthority("ROLE_"+role.toString())).toList();
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(token.getSubject(),null,grats);
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
             }
 
-            request.setAttribute("id",token.getSubject());
 
-            var roles = token.getClaim("roles").asList(Object.class);
-            var grats =
-                    roles.stream().map(role ->
-                            new SimpleGrantedAuthority("ROLE_"+role.toString())).toList();
-
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(token.getSubject(),null,grats);
-
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-        }
 
         filterChain.doFilter(request, response);
 
