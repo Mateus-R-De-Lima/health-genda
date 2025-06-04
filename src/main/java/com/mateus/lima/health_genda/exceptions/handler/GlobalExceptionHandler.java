@@ -41,26 +41,26 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleBadRequest(BadRequestException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("error", "Bad Request");
+        error.put("details", ex.getErrors());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleNotFound(NotFoundException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("error", "Not Found");
+        error.put("details", ex.getErrors()); 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        List<FieldErrorResponse> errors = List.of(
-                new FieldErrorResponse("user", ex.getMessage())
-        );
-
-        ApiErrorResponse response = new ApiErrorResponse(409, errors); // 409 = Conflict
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    public ResponseEntity<Map<String, Object>>  handleUserAlreadyExists(UserAlreadyExistsException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("error", "Not Found");
+        error.put("details", ex.getErrors()); ; // 409 = Conflict
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

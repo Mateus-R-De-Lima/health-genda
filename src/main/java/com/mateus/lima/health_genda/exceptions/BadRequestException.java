@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
+
 public class BadRequestException extends RuntimeException{
     private final List<FieldErrorResponse> errors;
 

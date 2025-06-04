@@ -4,11 +4,14 @@ import com.mateus.lima.health_genda.adapters.dtos.user.UserRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.user.UserResponseDTO;
 import com.mateus.lima.health_genda.domain.entities.User;
 import com.mateus.lima.health_genda.domain.enums.UserRole;
+import com.mateus.lima.health_genda.exceptions.FieldErrorResponse;
 import com.mateus.lima.health_genda.exceptions.UserAlreadyExistsException;
 import com.mateus.lima.health_genda.infrastructure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,8 @@ public class CreateUserUseCase {
 
        this.userRepository.findByEmail(userRequestDto.getEmail())
                 .ifPresent((user) -> {
-                    throw new UserAlreadyExistsException("A user with this email already exists");
+                    throw new UserAlreadyExistsException(List.of(
+                            new FieldErrorResponse("user exists","A user with this email already exists")));
                 });
 
 

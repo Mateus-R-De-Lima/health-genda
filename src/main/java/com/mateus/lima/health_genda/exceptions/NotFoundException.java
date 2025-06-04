@@ -10,6 +10,7 @@ public class NotFoundException extends RuntimeException {
     private final List<FieldErrorResponse> errors;
 
     public NotFoundException(List<FieldErrorResponse> errors) {
+        super("Erro de validação");
         this.errors = errors;
     }
 }

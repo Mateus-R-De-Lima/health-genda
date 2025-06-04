@@ -1,8 +1,13 @@
 package com.mateus.lima.health_genda.exceptions;
 
-public class UserAlreadyExistsException extends RuntimeException {
+import lombok.Data;
 
-    public UserAlreadyExistsException(String message) {
-        super(message);
+import java.util.List;
+@Data
+public class UserAlreadyExistsException extends RuntimeException {
+    private final List<FieldErrorResponse> errors;
+    public UserAlreadyExistsException(List<FieldErrorResponse> errors) {
+        super("Erro de validação");
+        this.errors = errors;
     }
 }
