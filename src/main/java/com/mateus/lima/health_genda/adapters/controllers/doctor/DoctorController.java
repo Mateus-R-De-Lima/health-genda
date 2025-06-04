@@ -3,6 +3,7 @@ package com.mateus.lima.health_genda.adapters.controllers.doctor;
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorResponseDTO;
 import com.mateus.lima.health_genda.application.usecases.doctor.CreateDoctorUseCase;
+import com.mateus.lima.health_genda.application.usecases.doctor.FindAllDoctorUseCase;
 import com.mateus.lima.health_genda.application.usecases.doctor.FindDoctorByIdUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.RequestEntity;
@@ -23,6 +24,7 @@ public class DoctorController {
 
     private final FindDoctorByIdUseCase findDoctorByIdUseCase;
 
+    private final FindAllDoctorUseCase findAllDoctorUseCase;
 
     @PostMapping("/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
@@ -38,7 +40,11 @@ public class DoctorController {
     }
 
 
-
+    @GetMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> findAll()  {
+        return ResponseEntity.ok().body(findAllDoctorUseCase.execute());
+    }
 
 
 }

@@ -31,8 +31,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                             auth.requestMatchers(PERMIT_ALL_LIST).permitAll(); // permite todos de /user/**
                             auth.anyRequest().authenticated();
-
-
                         }
                 ).exceptionHandling(exception ->
                         exception
