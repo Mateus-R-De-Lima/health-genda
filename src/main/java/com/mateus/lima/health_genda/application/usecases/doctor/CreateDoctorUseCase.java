@@ -25,14 +25,26 @@ public class CreateDoctorUseCase {
     private  final DoctorRepository doctorRepository;
 
     public DoctorResponseDTO execute(DoctorRequestDTO doctorRequestDTO, UUID userId)  {
+
+        if (userId == null) {
+            throw new BadRequestException(List.of(
+                    new FieldErrorResponse("id", "The ID must be provided")));
+        }
+
         var user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(List.of(
                         new FieldErrorResponse("userId", "User with ID " + userId + " not found"))));
 
+
+        doctorRepository.findByUserId(userId).ifPresent((doctor) ->{
+            throw new BadRequestException(List.of(
+                    new FieldErrorResponse("userId", "The ID must be provided")));
+        });
         if (!UserRole.DOCTOR.equals(user.getRole())) {
             throw new BadRequestException(List.of(
                     new FieldErrorResponse("role", "User does not have permission to be a doctor")));
         }
+
 
         var doctor = DoctorMapper.toEntity(doctorRequestDTO,user);
 

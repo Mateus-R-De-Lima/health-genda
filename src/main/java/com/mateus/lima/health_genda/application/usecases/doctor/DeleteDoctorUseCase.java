@@ -1,7 +1,7 @@
 package com.mateus.lima.health_genda.application.usecases.doctor;
 
-import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorResponseDTO;
-import com.mateus.lima.health_genda.adapters.mappers.DoctorMapper;
+
+import com.mateus.lima.health_genda.exceptions.BadRequestException;
 import com.mateus.lima.health_genda.exceptions.FieldErrorResponse;
 import com.mateus.lima.health_genda.exceptions.NotFoundException;
 import com.mateus.lima.health_genda.infrastructure.repositories.DoctorRepository;
@@ -13,19 +13,36 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FindDoctorByIdUseCase {
+public class DeleteDoctorUseCase {
 
     private final DoctorRepository doctorRepository;
 
-    public DoctorResponseDTO execute(UUID id){
+    public void execute(UUID id){
+
+        if (id == null) {
+            throw new BadRequestException(List.of(
+                    new FieldErrorResponse("id", "The ID must be provided")));
+        }
 
         var existingDoctor = doctorRepository.findById(id).orElseThrow(() ->{
-            throw new   NotFoundException(List.of(
+            throw new NotFoundException(List.of(
                     new FieldErrorResponse("doctor", "Doctor not found")));
         });
 
+        if (Boolean.FALSE.equals(existingDoctor.getIsActive())) {
+            throw new BadRequestException(
+                    List.of(new FieldErrorResponse("doctor", "The doctor is already deactivated"))
+            );
+        }
 
-        return DoctorMapper.toResponseDTO(existingDoctor);
+
+
+
+        existingDoctor.setIsActive(false);
+
+        doctorRepository.save(existingDoctor);
 
     }
+
+
 }

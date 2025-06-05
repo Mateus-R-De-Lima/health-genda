@@ -1,8 +1,11 @@
 package com.mateus.lima.health_genda.application.usecases.doctor;
 
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorResponseDTO;
+import com.mateus.lima.health_genda.adapters.mappers.DoctorMapper;
 import com.mateus.lima.health_genda.infrastructure.repositories.DoctorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -16,17 +19,14 @@ public class FindAllDoctorUseCase {
     private final DoctorRepository doctorRepository;
 
 
-    public List<DoctorResponseDTO> execute() {
-        return doctorRepository.findAll().stream()
-                .map(doctor -> DoctorResponseDTO.builder()
-                        .id(doctor.getId())
-                        .phone(doctor.getPhone())
-                        .crm(doctor.getCrm())
-                        .bio(doctor.getBio())
-                        .userId(doctor.getUser().getId())
-                        .specialty(doctor.getSpecialty())
-                        .build())
-                .collect(Collectors.toList());
+    public Page<DoctorResponseDTO> execute(Boolean isActive, Pageable pageable) {
+
+        if(isActive == null){
+        return  doctorRepository.findAll(pageable)
+                    .map(DoctorMapper::toResponseDTO);
+        }
+        return doctorRepository.findByIsActive(isActive, pageable)
+                .map(DoctorMapper::toResponseDTO);
     }
 
 }
