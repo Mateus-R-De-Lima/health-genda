@@ -22,7 +22,10 @@ public class SecurityConfig {
     private  final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private static final String[] PERMIT_ALL_LIST = {
             "/user/**",
-            "/auth/**"
+            "/auth/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**"
     };
 
     @Bean
