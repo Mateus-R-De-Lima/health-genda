@@ -1,17 +1,27 @@
 package com.mateus.lima.health_genda.adapters.controllers.doctor;
 
+import com.mateus.lima.health_genda.adapters.dtos.auth.AuthRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorResponseDTO;
 import com.mateus.lima.health_genda.application.usecases.doctor.*;
+import com.mateus.lima.health_genda.exceptions.ApiErrorResponse;
+import com.mateus.lima.health_genda.exceptions.BadRequestException;
+import com.mateus.lima.health_genda.exceptions.NotFoundException;
+import com.mateus.lima.health_genda.infrastructure.security.hendle.CustomAccessDeniedHandler;
+import com.mateus.lima.health_genda.infrastructure.security.hendle.CustomAuthenticationEntryPoint;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -19,11 +29,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/doctor")
 @RequiredArgsConstructor
-@Tag(name = "Doctor", description = "The Doctor controller is responsible for handling all operations that can be performed by a doctor or an administrator, including creating, updating, viewing, and deleting doctor-related data.")
-
-public class DoctorController {
+@RequestMapping("/doctor")
+public class DoctorController implements DoctorApi {
 
     private final CreateDoctorUseCase createDoctorUseCase;
 
@@ -38,13 +46,13 @@ public class DoctorController {
     @PostMapping("/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
     public ResponseEntity<Object> create(@PathVariable UUID userId, @RequestBody DoctorRequestDTO doctorRequestDTO)  {
-        return ResponseEntity.ok().body(createDoctorUseCase.execute(doctorRequestDTO,userId));
+        return ResponseEntity.status(HttpServletResponse.SC_CREATED).body(createDoctorUseCase.execute(doctorRequestDTO,userId));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{doctorId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
-    public ResponseEntity<Object> findById(@PathVariable UUID id)  {
-        return ResponseEntity.ok().body(findDoctorByIdUseCase.execute(id));
+    public ResponseEntity<Object> findById(@PathVariable UUID doctorId)  {
+        return ResponseEntity.ok().body(findDoctorByIdUseCase.execute(doctorId));
     }
 
 
@@ -63,10 +71,10 @@ public class DoctorController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{doctorId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> delete(@PathVariable UUID id)  {
-             deleteDoctorUseCase.execute(id);
+    public ResponseEntity<Object> delete(@PathVariable UUID doctorId)  {
+             deleteDoctorUseCase.execute(doctorId);
         return ResponseEntity.noContent().build();
     }
 
