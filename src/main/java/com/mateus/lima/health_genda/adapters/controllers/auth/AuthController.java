@@ -3,6 +3,8 @@ package com.mateus.lima.health_genda.adapters.controllers.auth;
 import com.mateus.lima.health_genda.adapters.dtos.auth.AuthRequestDTO;
 import com.mateus.lima.health_genda.application.usecases.auth.AuthUseCase;
 import com.mateus.lima.health_genda.domain.enums.UserRole;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import javax.naming.AuthenticationException;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "auth",description = "Endpoint responsible for generating the JWT token that will be used for authentication on the other routes.")
 public class AuthController {
     private final AuthUseCase authUseCase;
 

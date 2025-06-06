@@ -3,6 +3,7 @@ package com.mateus.lima.health_genda.adapters.controllers.doctor;
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorRequestDTO;
 import com.mateus.lima.health_genda.adapters.dtos.doctor.DoctorResponseDTO;
 import com.mateus.lima.health_genda.application.usecases.doctor.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/doctor")
 @RequiredArgsConstructor
+@Tag(name = "Doctor", description = "The Doctor controller is responsible for handling all operations that can be performed by a doctor or an administrator, including creating, updating, viewing, and deleting doctor-related data.")
+
 public class DoctorController {
 
     private final CreateDoctorUseCase createDoctorUseCase;
