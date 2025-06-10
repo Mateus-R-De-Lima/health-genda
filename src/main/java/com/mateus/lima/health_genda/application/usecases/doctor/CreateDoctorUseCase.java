@@ -12,6 +12,7 @@ import com.mateus.lima.health_genda.exceptions.NotFoundException;
 import com.mateus.lima.health_genda.infrastructure.repositories.DoctorRepository;
 import com.mateus.lima.health_genda.infrastructure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class CreateDoctorUseCase {
 
     private  final UserRepository userRepository;
+
     private  final DoctorRepository doctorRepository;
 
     public DoctorResponseDTO execute(DoctorRequestDTO doctorRequestDTO, UUID userId)  {
@@ -40,6 +42,7 @@ public class CreateDoctorUseCase {
             throw new BadRequestException(List.of(
                     new FieldErrorResponse("userId", "The ID must be provided")));
         });
+
         if (!UserRole.DOCTOR.equals(user.getRole())) {
             throw new BadRequestException(List.of(
                     new FieldErrorResponse("role", "User does not have permission to be a doctor")));
